@@ -1,0 +1,70 @@
+/* Estilos generales */
+.slider-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columnas por defecto */
+    padding-left: 1%;
+    margin-top: 0;
+  }
+  
+  .slider-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px; /* Redondeo de bordes moderado */
+    padding: 16px;
+    margin-top: 4%;
+  }
+  
+  .slider-item img {
+    width: 99%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .slider-item .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 99%;
+    background: linear-gradient(to top, black, transparent);
+    color: white;
+    padding: 16px;
+    text-align: left;
+  }
+  
+  .slider-item h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .slider-item p {
+    font-size: 0.9rem;
+    color: rgb(255, 255, 255);
+    line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Media query para dispositivos móviles */
+  @media (max-width: 767px) {
+    /* En pantallas pequeñas, apilamos las imágenes verticalmente */
+    .slider-container {
+      grid-template-columns: 1fr; /* Una sola columna en móviles */
+    }
+  
+    /* Ajustamos el margen superior y el padding */
+    .slider-item {
+      padding: 8px; /* Menos padding en móviles */
+      margin-top: 5%; /* Más espacio entre los elementos */
+    }
+  
+    .slider-item h3 {
+      font-size: 1rem; /* Reducimos el tamaño del título */
+    }
+  
+    .slider-item p {
+      font-size: 0.8rem; /* Reducimos el tamaño de la descripción */
+    }
+  }
+  

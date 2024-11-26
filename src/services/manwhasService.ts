@@ -29,6 +29,14 @@ export interface NuevoCapitulo {
   };
 }
 
+export interface Slider {
+  titulo: string;
+  descripcion?: string; // Aquí cambiamos de `string | null` a `string | undefined`
+  banner: string;
+  url: string;
+}
+
+
 // Servicio para obtener los datos de Manwhas populares
 export const getManwhasPopulares = async (): Promise<Manwha[]> => {
   try {
@@ -48,5 +56,15 @@ export const getNuevosCapitulosManwha = async (): Promise<NuevoCapitulo[]> => {
   } catch (error) {
     console.error('Error al obtener los nuevos capítulos de manwha:', error);
     throw error;
+  }
+};
+
+export const getSliderData = async (): Promise<Slider[]> => {
+  try {
+    const response = await axios.get<Slider[]>('http://127.0.0.1:8000/api/Sliders'); // Cambia a tu URL
+    return response.data; // Axios ya asegura que el tipo coincide con Slider[]
+  } catch (error) {
+    console.error('Error al obtener datos del slider:', error);
+    return [];
   }
 };
