@@ -36,6 +36,22 @@ export interface Slider {
   url: string;
 }
 
+export interface Capitulo {
+  chapter_id: number;
+  fecha_publicacion: string;
+  titulo: string;
+}
+
+export interface ManwhaPerfilResponse {
+  id: string;
+  titulo: string;
+  portada: string;
+  descripcion: string;
+  capitulos: Capitulo[]; // Debe ser un array de objetos `Capitulo`
+  url: string;
+  genero: string;
+}
+
 
 // Servicio para obtener los datos de Manwhas populares
 export const getManwhasPopulares = async (): Promise<Manwha[]> => {
@@ -66,5 +82,18 @@ export const getSliderData = async (): Promise<Slider[]> => {
   } catch (error) {
     console.error('Error al obtener datos del slider:', error);
     return [];
+  }
+};
+
+export const getManwhaPerfil = async (manwha: string): Promise<ManwhaPerfilResponse> => {
+  try {
+    // Realizamos la solicitud GET al servidor
+    const response = await axios.get<ManwhaPerfilResponse>(`http://127.0.0.1:8000/api/getManwhaPerfil?manwha=${manwha}`);
+    
+    // Retornamos los datos de la respuesta
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener el perfil del Manwha:', error);
+    throw error; // Lanzamos el error para que sea manejado en el componente que lo llame
   }
 };

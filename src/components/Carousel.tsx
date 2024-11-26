@@ -1,5 +1,6 @@
 import React from 'react';
 import Slider from 'react-slick';
+import { Link } from 'react-router-dom'; // Importamos Link de React Router
 import '../styles/Carousel.css';
 import { Manwha, NuevoCapitulo } from '../services/manwhasService';
 
@@ -13,7 +14,7 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
+    speed: 1000,
     slidesToShow: 8,
     slidesToScroll: 8,
     arrows: false,
@@ -39,17 +40,16 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
       <Slider {...settings}>
         {manwhas.map((manwha) => (
           <div key={manwha.id} className="carousel-item">
-            <a href={manwha.enlace} target="_blank" rel="noopener noreferrer">
+            {/* Usamos Link en lugar de <a> */}
+            <Link to={`/manwha-perfil/${encodeURIComponent(manwha.enlace)}`} className="carousel-link">
               <img
                 src={manwha.portada}
                 alt={manwha.titulo}
                 className="carousel-image"
               />
-            </a>
+            </Link>
 
             {/* Título fuera de la imagen */}
-          
-            {/* Overlay de la calificación o capítulo dentro de la imagen, en la esquina inferior derecha */}
             <div className="carousel-overlay">
               {type === 1 ? ( // Si es de tipo 1 (Recomendado)
                 <>
