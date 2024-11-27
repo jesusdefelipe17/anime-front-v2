@@ -52,6 +52,25 @@ export interface ManwhaPerfilResponse {
   genero: string;
 }
 
+export interface ChapterData {
+  pages: string[];
+  prevChapter: PrevChapter | null;
+  nextChapter: NextChapter | null;
+
+}
+
+export interface NextChapter {
+  id: number|  null;
+  name: string | null;
+
+}
+
+export interface PrevChapter {
+  id: number|  null;
+  name: string | null;
+
+}
+
 
 // Servicio para obtener los datos de Manwhas populares
 export const getManwhasPopulares = async (): Promise<Manwha[]> => {
@@ -97,3 +116,23 @@ export const getManwhaPerfil = async (manwha: string): Promise<ManwhaPerfilRespo
     throw error; // Lanzamos el error para que sea manejado en el componente que lo llame
   }
 };
+
+export const cargarCapituloManwha = async (url: string): Promise<ChapterData> => {
+  try {
+    const response = await axios.get<any>(`http://127.0.0.1:8000/api/cargarCapitulosManwha?url=${url}`);
+    const { pages} = response.data;
+
+    // Aseguramos que pages sea un arreglo, aunque sea vacío si no existe
+    const chapterData: ChapterData = {
+      pages: pages.pages, // Si pages no es un arreglo, asignamos un arreglo vacío
+      prevChapter:  pages.prev_chapter,
+      nextChapter:  pages.next_chapter,
+    };
+
+    return chapterData;
+  } catch (error) {
+    console.error("Error al cargar el capítulo:", error);
+    throw new Error("No se pudo cargar el capítulo.");
+  }
+};
+

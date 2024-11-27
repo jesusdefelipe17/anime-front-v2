@@ -7,6 +7,7 @@ import ManwhaPage from './components/ManwhaPage';
 import PerfilPage from './components/PerfilPage';
 import Navbar from './components/Navbar'; // Asegúrate de que la ruta sea correcta
 import ManwhaPerfilPage from './components/ManwhaPerfilPage';
+import ReadManwhaChapter from './components/ReadManwhaChapter';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
           <Route path="/manwha" element={<ManwhaPage />} />
           <Route path="/perfil" element={<PerfilPage />} />
           <Route path="/manwha-perfil/:id" element={<ManwhaPerfilPage/>} />
+          <Route path="/read-manwha-chapter/:url/:titulo" element={<ReadManwhaChapter/>} />
         </Routes>
       </div>
     </div>

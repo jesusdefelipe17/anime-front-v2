@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate  } from 'react-router-dom';
 import { getManwhaPerfil } from '../services/manwhasService';
+import Spinner from './Spinner';
 
 export interface Capitulo {
   chapter_id: number;
@@ -23,6 +24,7 @@ const ManwhaPerfilPage: React.FC = () => {
   const [manwhaPerfil, setManwhaPerfil] = useState<ManwhaPerfilResponse | null>(null); // Estado para almacenar los datos
   const [loading, setLoading] = useState<boolean>(true); // Estado para controlar la carga
   const [error, setError] = useState<string | null>(null); // Estado para manejar errores
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -39,8 +41,15 @@ const ManwhaPerfilPage: React.FC = () => {
     }
   }, [id]); // Repetir la llamada cuando el parámetro "id" cambie
 
+  
+  const irALeerCapitulo = (url: string, titulo: string, episodioId: string) => {
+    navigate(`/read-manwha-chapter/${encodeURIComponent(url)}/${encodeURIComponent(titulo)}`);
+  };
+  
+  
+
   if (loading) {
-    return <div>Cargando...</div>;
+    return <Spinner />; 
   }
 
   if (error) {
@@ -113,11 +122,17 @@ const ManwhaPerfilPage: React.FC = () => {
             {/* Listado de capítulos */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {manwhaPerfil.capitulos.map((capitulo) => (
-                <a
-                  key={capitulo.chapter_id}
-                  href={`/capitulo/${capitulo.chapter_id}/comic-${manwhaPerfil.titulo}`}
-                  className="group flex items-center justify-between gap-4 hover:bg-gray-700/25 px-4 py-1 rounded-full transition-background-color border border-gray-700 h-12 sf-ripple-container"
-                >
+               <div
+               key={capitulo.chapter_id}
+               className="group flex items-center justify-between gap-4 hover:bg-gray-700/25 px-4 py-1 rounded-full transition-background-color border border-gray-700 h-12 sf-ripple-container cursor-pointer"
+               onClick={() =>
+                 irALeerCapitulo(
+                   `https://olympuscomic.com/api/capitulo/${manwhaPerfil.url}/${capitulo.chapter_id}`,
+                   capitulo.titulo,
+                   capitulo.chapter_id.toString()
+                 )
+               }
+             >
                   {/* Indicador de color */}
                   <div className="w-2 aspect-square rounded-full bg-amber-300"></div>
 
@@ -138,7 +153,7 @@ const ManwhaPerfilPage: React.FC = () => {
                       </time>
                     </div>
                   </div>
-                </a>
+                 </div>
               ))}
             </div>
           </div>

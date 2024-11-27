@@ -1,0 +1,73 @@
+/* Contenedor principal que alberga el capítulo */
+.chapter-container {
+    padding: 20px;
+    max-width: 600px;  /* Reduce el ancho máximo del contenedor */
+    margin: 0 auto;  /* Centra el contenido en la página */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;  /* Menor espacio entre los elementos */
+  }
+  
+  /* Contenedor para las imágenes del capítulo, dispuesto verticalmente */
+  .pages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Centra las imágenes horizontalmente */
+  }
+  
+  /* Estilo para cada imagen del capítulo */
+  .chapter-image {
+    width: 90%;  /* Reduce el tamaño de las imágenes para que no ocupen todo el ancho */
+    height: auto;
+    max-width: 720px;  /* Limita aún más el ancho máximo de las imágenes */
+    
+  }
+
+  /* Título del capítulo */
+  .chapter-title {
+    font-size: 20px;  /* Reduce el tamaño de la fuente del título */
+    font-weight: bold;
+    margin-bottom: 15px;  /* Menos espacio debajo del título */
+    text-align: center;  /* Centra el título */
+  }
+  
+  /* Estilo para los botones de navegación */
+  .navigation-buttons {
+    display: flex;
+    justify-content: center;  /* Centra los botones de navegación */
+    gap: 15px;  /* Espacio entre los botones */
+    margin-top: 20px;  /* Añade espacio arriba de los botones */
+  }
+  
+  /* Botón de navegación */
+  .navigation-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 18px;  /* Ajusta el padding de los botones */
+    border-radius: 8px;
+    font-size: 16px;  /* Ajusta el tamaño de la fuente de los botones */
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;  /* Limita el ancho de los botones */
+    text-align: center;  /* Centra el texto del botón */
+  }
+  
+  /* Efecto de hover para los botones */
+  .navigation-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Manwhas page background */
+  .manwhas-page {
+    background: linear-gradient(to bottom, #000000, rgb(0, 0, 0) 50%, #0e1c42); 
+    /* El gradiente comienza con negro, pasa al azul (rgb(46, 85, 255)) en el 70% y luego se oscurece a azul oscuro (#132557) */
+    min-height: 100vh; /* Asegura que ocupe todo el alto de la ventana */
+    display: flex;
+    flex-direction: column;
+    background-attachment: fixed; /* Hace que el fondo se quede fijo mientras haces scroll */
+  }
+  
