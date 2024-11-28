@@ -68,6 +68,17 @@ export interface PrevChapter {
   name: string | null;
 }
 
+export interface MangaBusquedaResponse {
+  id: number;
+  poster: string;
+  puntuacion: number;
+  titulo: string;
+  tipo: string;
+  url: string;
+  descripcion?: string;  // Esta propiedad es opcional si no siempre está presente
+}
+
+
 //const API_BASE_URL = 'http://127.0.0.1:8000'; 
 const API_BASE_URL = 'https://web-production-b3a6.up.railway.app'; 
 
@@ -132,5 +143,18 @@ export const cargarCapituloManwha = async (url: string): Promise<ChapterData> =>
   } catch (error) {
     console.error("Error al cargar el capítulo:", error);
     throw new Error("No se pudo cargar el capítulo.");
+  }
+};
+
+export const getManwhaBusqueda = async (manwha: string): Promise<MangaBusquedaResponse[]> => {
+  try {
+    // Realizamos la solicitud GET al servidor
+    const response = await axios.get<MangaBusquedaResponse[]>(`${API_BASE_URL}/api/getManwhaBusqueda?nombre=${manwha}`);
+    
+    // Retornamos los datos de la respuesta
+    return response.data;
+  } catch (error) {
+    console.error('Error al buscar el Manwha:', error);
+    throw error; // Lanzamos el error para que sea manejado en el componente que lo llame
   }
 };

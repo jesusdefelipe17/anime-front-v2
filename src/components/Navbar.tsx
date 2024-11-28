@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import BusquedaComponent from './BusquedaComponent'; // Importa el componente
 import '../styles/Navbar.css';
 
 const Navbar: React.FC = () => {
@@ -82,10 +83,7 @@ const Navbar: React.FC = () => {
         </div>
         
         {/* Aquí cambiaremos la parte de "KEY ANIME" por la imagen */}
-       
         <img src="images/KING_ANIME.png" alt="KEY ANIME" className="h-16 ml-4 mt-1 w-auto" />
-
-       
       </div>
 
       {/* Navbar Center (visible en pantallas grandes) */}
@@ -122,27 +120,7 @@ const Navbar: React.FC = () => {
       {/* Navbar End */}
       <div className="navbar-end flex items-center space-x-4">
         {/* Lupa de búsqueda */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="h-8 w-8"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-          />
-        </svg>
-        <Link to="/perfil" className="btn btn-ghost">
-          <div className="avatar placeholder">
-            <div className="bg-neutral text-neutral-content w-8 rounded-full">
-              <span className="text-xs">JF</span>
-            </div>
-          </div>
-        </Link>
+        <BusquedaComponent /> {/* Usamos el nuevo componente */}
       </div>
     </div>
   );
