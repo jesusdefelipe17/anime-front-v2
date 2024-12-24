@@ -73,14 +73,27 @@
 .clear-button {
   position: absolute;
   top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.option {
+  position: absolute;
+  top: 50%;
   right: 10px;
   transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
-  color: #aaa;
+  color: #ffffff;
   font-size: 20px;
 }
+
 
 .clear-button:hover {
   color: #333;
@@ -90,7 +103,7 @@
 .search-button {
   position: absolute;
   top: 50%;
-  right: 40px; /* Ajustar para que no se sobreponga con la X */
+  right: 60px; /* Ajustar para que no se sobreponga con la X */
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -124,4 +137,4 @@
   margin-top: 1rem;
   text-align: center;
 }
-  
+

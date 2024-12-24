@@ -1,8 +1,8 @@
-import React from 'react';
-import Slider from 'react-slick';
-import { Link } from 'react-router-dom'; // Importamos Link de React Router
-import '../styles/Carousel.css';
-import { Manwha, NuevoCapitulo } from '../services/manwhasService';
+import React from "react";
+import Slider from "react-slick";
+import { Link } from "react-router-dom";
+import "../styles/Carousel.css";
+import { Manwha, NuevoCapitulo } from "../services/manwhasService";
 
 interface CarouselProps {
   manwhas: (Manwha | NuevoCapitulo)[]; // Puede ser un Manwha o un NuevoCapitulo
@@ -36,32 +36,54 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
 
   return (
     <div className="carousel-container">
-      {title && <h1 className="carousel-title">{title}</h1>} {/* Renderiza el título */}
+      {title && <h1 className="carousel-title">{title}</h1>}
       <Slider {...settings}>
         {manwhas.map((manwha) => (
           <div key={manwha.id} className="carousel-item">
-            {/* Usamos Link en lugar de <a> */}
-            <Link to={`/manwha-perfil/${encodeURIComponent(manwha.enlace)}`} className="carousel-link">
-              <img
-                src={manwha.portada}
-                alt={manwha.titulo}
-                className="carousel-image"
-              />
-            </Link>
+            {/* Enlace dinámico según el tipo */}
+            {type === 2 && "latest_chapter" in manwha ? (
+              // Caso NuevoCapitulo
+              <Link
+                to={`/read-manwha-chapter/${encodeURIComponent(
+                  (manwha as NuevoCapitulo).enlace
+                )}/${encodeURIComponent(
+                  (manwha as NuevoCapitulo).latest_chapter.name
+                )}`}
+                className="carousel-link"
+              >
+                <img
+                  src={manwha.portada}
+                  alt={manwha.titulo}
+                  className="carousel-image"
+                />
+              </Link>
+            ) : (
+              // Caso Manwha
+              <Link
+                to={`/manwha-perfil/${encodeURIComponent(
+                  (manwha as Manwha).enlace
+                )}`}
+                className="carousel-link"
+              >
+                <img
+                  src={manwha.portada}
+                  alt={manwha.titulo}
+                  className="carousel-image"
+                />
+              </Link>
+            )}
 
             {/* Título fuera de la imagen */}
             <div className="carousel-overlay">
-              {type === 1 ? ( // Si es de tipo 1 (Recomendado)
+              {type === 1 ? (
                 <>
                   <span className="star">⭐</span>
-                  <span>{manwha.calificacion}</span>
+                  <span>{(manwha as Manwha).calificacion}</span>
                 </>
-              ) : ( // Si es de tipo 2 (Últimos capítulos)
-                type === 2 ? ( // Verificamos si es un NuevoCapitulo
-                  <span>Capítulo {manwha.latest_chapter.name}</span> // Mostrar el número de capítulo
-                ) : (
-                  <span>Capítulo desconocido</span> // En caso de que no sea un NuevoCapitulo
-                )
+              ) : type === 2 && "latest_chapter" in manwha ? (
+                <span>Capítulo {manwha.latest_chapter.name}</span>
+              ) : (
+                <span>Capítulo desconocido</span>
               )}
             </div>
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { getManwhaBusqueda, MangaBusquedaResponse } from "../services/manwhasService"; // Importar el servicio
 import "../styles/SearchComponent.css"; // Asegúrate de incluir este archivo CSS
+import { Link } from "react-router-dom";
 
 const SearchComponent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false); // Estado para controlar si la barra está abierta
@@ -91,7 +92,8 @@ const SearchComponent: React.FC = () => {
         {/* Barra de búsqueda */}
         <div className="search-bar">
           <form>
-            <div className="relative w-full max-w-lg mx-auto">
+            {/* Campo de búsqueda y botones */}
+            <div className="relative w-full max-w-lg mx-auto flex items-center gap-2">
               <input
                 type="text"
                 name="search"
@@ -100,11 +102,12 @@ const SearchComponent: React.FC = () => {
                 className="search-input"
                 placeholder="Busca algo..."
               />
-              {/* Botón de la lupa (si la barra tiene texto, mostrar la X) */}
+
+              {/* Botón para limpiar búsqueda */}
               {searchQuery && (
                 <button
                   type="button"
-                  className="clear-button"
+                  className="clear-button flex items-center justify-center"
                   onClick={handleClearSearch}
                 >
                   <svg
@@ -113,7 +116,7 @@ const SearchComponent: React.FC = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="h-5 w-5"
+                    className="h-6 w-6 text-gray-600"
                   >
                     <path
                       strokeLinecap="round"
@@ -123,27 +126,10 @@ const SearchComponent: React.FC = () => {
                   </svg>
                 </button>
               )}
-              <button
-                type="button"
-                className="search-button"
-                onClick={() => fetchResults(searchQuery)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="h-5 w-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-              </button>
+
+          
             </div>
+
           </form>
 
           {/* Resultados de la búsqueda */}
@@ -155,27 +141,27 @@ const SearchComponent: React.FC = () => {
                 <li key={index} className="search-result-item flex items-center gap-4 p-4 border-b border-gray-300">
                   {/* Mostrar el póster */}
                   <img 
-                      src={result.poster} 
-                      alt={result.titulo} 
-                      className="w-16 h-24 object-cover rounded-md" 
+                    src={result.poster} 
+                    alt={result.titulo} 
+                    className="w-16 h-24 object-cover rounded-md" 
                   />
                   {/* Mostrar la información del título y puntuación */}
                   <div>
-                      <h3 className="font-semibold text-lg">{result.titulo}</h3>
-                      <p className="text-gray-500">Puntuación: {result.puntuacion}</p>
-                      {/* Enlace al detalle */}
-                      <a 
-                      href={result.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <h3 className="font-semibold text-lg">{result.titulo}</h3>
+                    <p className="text-gray-500">Puntuación: {result.puntuacion}</p>
+                    {/* Enlace al detalle */}
+                    <Link 
+                      to={`/manwha-perfil/${encodeURIComponent(result.url)}`} 
                       className="text-teal-500 hover:underline"
-                      >
+                      onClick={() => setIsOpen(false)} // Cierra la barra de búsqueda
+                    >
                       Ver más
-                      </a>
+                    </Link>
                   </div>
                 </li>
               ))}
             </ul>
+
           )}
         </div>
       </div>

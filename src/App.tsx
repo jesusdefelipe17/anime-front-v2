@@ -16,10 +16,10 @@ const App: React.FC = () => {
       <div className="page-content"> {/* Asegúrate de que esta clase esté aplicada */}
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/home" element={<ManwhaPage />} />
           <Route path="/anime" element={<AnimePage />} />
           <Route path="/manga" element={<MangaPage />} />
-          <Route path="/manwha" element={<ManwhaPage />} />
+          <Route path="/manwha" element={<HomePage />} />
           <Route path="/perfil" element={<PerfilPage />} />
           <Route path="/manwha-perfil/:id" element={<ManwhaPerfilPage/>} />
           <Route path="/read-manwha-chapter/:url/:titulo" element={<ReadManwhaChapter/>} />
