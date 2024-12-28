@@ -8,6 +8,7 @@ import PerfilPage from './components/PerfilPage';
 import Navbar from './components/Navbar'; // Asegúrate de que la ruta sea correcta
 import ManwhaPerfilPage from './components/ManwhaPerfilPage';
 import ReadManwhaChapter from './components/ReadManwhaChapter';
+import AnimePerfilPage from './components/AnimePerfilPage';
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<ManwhaPage />} />
           <Route path="/anime" element={<AnimePage />} />
+          <Route path="/anime-perfil/:id" element={<AnimePerfilPage />} />
           <Route path="/manga" element={<MangaPage />} />
           <Route path="/manwha" element={<HomePage />} />
           <Route path="/perfil" element={<PerfilPage />} />

@@ -1,23 +1,30 @@
 import React, { useState } from "react";
-import { getManwhaBusqueda, MangaBusquedaResponse } from "../services/manwhasService"; // Importar el servicio
+import { getManwhaBusqueda, getAnimeBusqueda, MangaBusquedaResponse,AnimeBusquedaResponse } from "../services/manwhasService"; // Importar el servicio
 import "../styles/SearchComponent.css"; // Asegúrate de incluir este archivo CSS
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const SearchComponent: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false); // Estado para controlar si la barra está abierta
   const [searchQuery, setSearchQuery] = useState(""); // Consulta de búsqueda
-  const [results, setResults] = useState<MangaBusquedaResponse[]>([]); // Resultados de la búsqueda
+  const [results, setResults] = useState<(MangaBusquedaResponse | AnimeBusquedaResponse)[]>([]); // Resultados de la búsqueda
   const [isLoading, setIsLoading] = useState(false); // Estado de "Cargando..."
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null); // Temporizador de debounce
 
-  // Llamar al servicio para buscar manwhas
+  const location = useLocation(); // Obtener la ubicación actual
+
+  // Llamar al servicio para buscar datos dependiendo de la ruta
   const fetchResults = async (query: string) => {
     setIsLoading(true);
     try {
-      const response = await getManwhaBusqueda(query); // Llamar al servicio
+      let response;
+      if (location.pathname === "/anime") {
+        response = await getAnimeBusqueda(query); // Servicio de búsqueda de anime
+      } else {
+        response = await getManwhaBusqueda(query); // Servicio de búsqueda de manwha
+      }
       setResults(response); // Guardar los datos en el estado
     } catch (error) {
-      console.error("Error al buscar el manwha:", error);
+      console.error("Error al buscar:", error);
       setResults([]); // Manejo básico del error
     } finally {
       setIsLoading(false);
@@ -126,10 +133,7 @@ const SearchComponent: React.FC = () => {
                   </svg>
                 </button>
               )}
-
-          
             </div>
-
           </form>
 
           {/* Resultados de la búsqueda */}
@@ -140,28 +144,31 @@ const SearchComponent: React.FC = () => {
               {results.map((result, index) => (
                 <li key={index} className="search-result-item flex items-center gap-4 p-4 border-b border-gray-300">
                   {/* Mostrar el póster */}
-                  <img 
-                    src={result.poster} 
-                    alt={result.titulo} 
-                    className="w-16 h-24 object-cover rounded-md" 
+                  <img
+                    src={result.poster}
+                    alt={result.titulo}
+                    className="w-16 h-24 object-cover rounded-md"
                   />
                   {/* Mostrar la información del título y puntuación */}
                   <div>
                     <h3 className="font-semibold text-lg">{result.titulo}</h3>
                     <p className="text-gray-500">Puntuación: {result.puntuacion}</p>
                     {/* Enlace al detalle */}
-                    <Link 
-                      to={`/manwha-perfil/${encodeURIComponent(result.url)}`} 
-                      className="text-teal-500 hover:underline"
-                      onClick={() => setIsOpen(false)} // Cierra la barra de búsqueda
-                    >
+                    <Link
+                    to={`/${location.pathname === "/anime" ? "anime-perfil" : "manwha-perfil"}/${
+                      location.pathname === "/anime"
+                        ? encodeURIComponent(result.id)
+                        : encodeURIComponent(result.url)
+                    }`}
+                    className="text-teal-500 hover:underline"
+                    onClick={() => setIsOpen(false)} // Cierra la barra de búsqueda
+                  >
                       Ver más
                     </Link>
                   </div>
                 </li>
               ))}
             </ul>
-
           )}
         </div>
       </div>

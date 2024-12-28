@@ -82,8 +82,7 @@ const Navbar: React.FC = () => {
           </ul>
         </div>
         
-        {/* Aquí cambiaremos la parte de "KEY ANIME" por la imagen */}
-        <img src="images/KING_ANIME.png" alt="KEY ANIME" className="h-16 ml-4 mt-1 w-auto" />
+       
       </div>
 
       {/* Navbar Center (visible en pantallas grandes) */}

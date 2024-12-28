@@ -52,6 +52,31 @@ export interface ManwhaPerfilResponse {
   genero: string;
 }
 
+export interface AnimePerfilResponse {
+  id: string;
+  titulo: string;
+  poster: string;
+  generos: string[];
+  descripcion: string;
+  calificacion: string; 
+  votos_totales: string;
+ 
+}
+
+export interface AnimePerfilEpisodiosResponse {
+  enlace:string;
+  episodio:string;
+  videos: Videos[];
+}
+
+export interface Videos {
+  code:string;
+  server:string;
+  titulo:string;
+  url:string;
+}
+
+
 export interface ChapterData {
   pages: string[];
   prevChapter: PrevChapter | null;
@@ -77,6 +102,19 @@ export interface MangaBusquedaResponse {
   url: string;
   descripcion?: string;  // Esta propiedad es opcional si no siempre está presente
 }
+
+
+export interface AnimeBusquedaResponse {
+  titulo: string;
+  url: string;
+  poster: string;
+  tipo: string;
+  puntuacion: number;
+  descripcion?: string;
+  id: number;
+}
+
+
 
 export interface ManwhaBusquedaResponse {
   titulo: string;
@@ -140,6 +178,32 @@ export const getManwhaPerfil = async (manwha: string): Promise<ManwhaPerfilRespo
   }
 };
 
+export const getAnimePerfil = async (manwha: string): Promise<AnimePerfilResponse> => {
+  try {
+    // Realizamos la solicitud GET al servidor
+    const response = await axios.get<AnimePerfilResponse>(`${API_BASE_URL}/api/getAnimePerfil?anime=${manwha}`);
+    
+    // Retornamos los datos de la respuesta
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener el perfil del Manwha:', error);
+    throw error; // Lanzamos el error para que sea manejado en el componente que lo llame
+  }
+};
+
+export const getAnimePerfilEpisodios = async (anime: string, page: number): Promise<AnimePerfilEpisodiosResponse[]> => {
+  try {
+    const limite = 12; // Número de episodios que quieres cargar por página
+    const response = await axios.get<AnimePerfilEpisodiosResponse[]>(`${API_BASE_URL}/api/episodios?url_serie=${anime}&pagina=${page}&limite=${limite}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener episodios del Anime:', error);
+    throw error;
+  }
+};
+
+
+
 export const cargarCapituloManwha = async (url: string): Promise<ChapterData> => {
   try {
     const response = await axios.get<any>(`${API_BASE_URL}/api/cargarCapitulosManwha?url=${url}`);
@@ -163,6 +227,19 @@ export const getManwhaBusqueda = async (manwha: string): Promise<MangaBusquedaRe
   try {
     // Realizamos la solicitud GET al servidor
     const response = await axios.get<MangaBusquedaResponse[]>(`${API_BASE_URL}/api/getManwhaBusqueda?nombre=${manwha}`);
+    
+    // Retornamos los datos de la respuesta
+    return response.data;
+  } catch (error) {
+    console.error('Error al buscar el Manwha:', error);
+    throw error; // Lanzamos el error para que sea manejado en el componente que lo llame
+  }
+};
+
+export const getAnimeBusqueda = async (manwha: string): Promise<AnimeBusquedaResponse[]> => {
+  try {
+    // Realizamos la solicitud GET al servidor
+    const response = await axios.get<AnimeBusquedaResponse[]>(`${API_BASE_URL}/api/getAnime?anime=${manwha}`);
     
     // Retornamos los datos de la respuesta
     return response.data;
