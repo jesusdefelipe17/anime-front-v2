@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams,useNavigate  } from 'react-router-dom';
-import { AnimePerfilEpisodiosResponse, AnimePerfilResponse, getAnimePerfil, getAnimePerfilEpisodios } from '../services/manwhasService';
+import { AnimePerfilEpisodiosResponse, AnimePerfilResponse, getAnimePerfil, getAnimePerfilEpisodios, Videos } from '../services/manwhasService';
 import Spinner from './Spinner';
-
+import '../styles/AnimePerfilPage.css'; // Asegúrate de importar el archivo CSS
 export interface Capitulo {
   chapter_id: number;
   fecha_publicacion: string;
@@ -20,14 +20,17 @@ export interface ManwhaPerfilResponse {
 }
 
 const ManwhaPerfilPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Obtenemos el id de la URL
-  const [animePerfil, setAnimePerfil] = useState<AnimePerfilResponse | null>(null); // Estado para almacenar los datos
-  const [animePerfilEpisodios, setAnimePerfilEpisodios] = useState<AnimePerfilEpisodiosResponse[]>([]); // Estado para almacenar los episodios
-  const [loading, setLoading] = useState<boolean>(true); // Estado para controlar la carga
-  const [error, setError] = useState<string | null>(null); // Estado para manejar errores
-  const [page, setPage] = useState(0); // Página actual
-  const [loadingMore, setLoadingMore] = useState(false); // Estado para saber si se está cargando más episodios
+  const { id } = useParams<{ id: string }>();
+  const [animePerfil, setAnimePerfil] = useState<AnimePerfilResponse | null>(null);
+  const [animePerfilEpisodios, setAnimePerfilEpisodios] = useState<AnimePerfilEpisodiosResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [selectedCapitulo, setSelectedCapitulo] = useState<Videos[] | null>(null);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
     // Función para obtener el perfil y episodios
     const fetchData = (page: number) => {
@@ -69,6 +72,12 @@ const ManwhaPerfilPage: React.FC = () => {
       fetchData(page);
     }, [id, page]);
 
+    useEffect(() => {
+      if (showModal && selectedCapitulo) {
+        console.log('El modal se ha abierto');
+      }
+    }, [showModal,selectedCapitulo]);
+    
   
   const irALeerCapitulo = (url: string, titulo: string, episodioId: string) => {
     navigate(`/read-manwha-chapter/${encodeURIComponent(url)}/${encodeURIComponent(titulo)}`);
@@ -77,6 +86,31 @@ const ManwhaPerfilPage: React.FC = () => {
   const cargarMasEpisodios = () => {
     setPage((prevPage) => prevPage + 1); // Incrementar la página para cargar más episodios
     setLoadingMore(true); // Mostrar el indicador de carga
+  };
+
+  const abrirModal = (capitulo: Videos[]) => {
+    console.log(capitulo); // Verificar el contenido
+    if (capitulo && capitulo.length > 0) {
+      setSelectedCapitulo(capitulo);
+      setShowModal(true);
+    } else {
+      console.error("El capítulo no tiene videos disponibles");
+    }
+  };
+  
+
+  const cerrarModal = () => {
+    setShowModal(false);
+    setSelectedCapitulo(null);
+  };
+
+  const seleccionarServidor = (url: string) => {
+    if (url) {
+      window.open(url, '_blank');
+      cerrarModal();
+    } else {
+      alert('Este servidor no tiene una URL válida.');
+    }
   };
 
   if (loading) {
@@ -126,7 +160,7 @@ const ManwhaPerfilPage: React.FC = () => {
                   <strong>Calificación:</strong> {animePerfil.calificacion || "N/A"}
                 </p>
                 <p className="text-sm text-gray-100">
-                  <strong>Género:</strong> {animePerfil.generos || "Desconocido"}
+                  <strong>Género:</strong> {Array.isArray(animePerfil.generos) ? animePerfil.generos.join(', ') : animePerfil.generos || "Desconocido"}
                 </p>
                 <p className="text-sm text-gray-100">
                   <strong>Votos:</strong> {animePerfil.votos_totales || "0"}
@@ -169,14 +203,17 @@ const ManwhaPerfilPage: React.FC = () => {
                 <div
                   key={capitulo.episodio}
                   className="group flex items-center justify-between gap-4 hover:bg-gray-700/25 px-4 py-1 rounded-full transition-background-color border border-gray-700 h-12 sf-ripple-container cursor-pointer"
+                  onClick={() => abrirModal(capitulo.videos)}
                 >
+
                   {/* Indicador de color */}
                   <div className="w-2 aspect-square rounded-full bg-amber-300"></div>
 
                   {/* Información del capítulo */}
-                  <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center justify-between w-full" >
                     <div>
                       <div className="text-sm text-gray-200 group-hover:text-white">
+                        
                         {capitulo.episodio} {/* Aquí se añade el índice + 1 */}
                       </div>
                       <div className="text-xs text-gray-400 leading-3">Por AnimeFLV</div>
@@ -211,8 +248,72 @@ const ManwhaPerfilPage: React.FC = () => {
             </div>
           </div>
  
+          {showModal && selectedCapitulo && !selectedVideo && (
+  <div className="mod fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white rounded-lg p-8 overflow-auto">
+      <h2 className="text-xl font-bold">Selecciona un servidor</h2>
+      <ul className="mt-4">
+        {selectedCapitulo.map((video) => (
+          <li
+            key={video.server}
+            className="cursor-pointer p-2 border-b"
+            onClick={() => setSelectedVideo(video.url || video.code)}
+          >
+            {video.titulo}
+          </li>
+        ))}
+      </ul>
+
+      <button
+        onClick={cerrarModal}
+        className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+)}
+
+{selectedVideo && (
+  <div className="mod fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white rounded-lg p-8 w-3/4 h-4/4 overflow-">
+      <h2 className="text-xl font-bold mb-4">Reproduciendo Video</h2>
+      <iframe
+        src={selectedVideo}
+        className="w-full h-full rounded-md"
+        allowFullScreen
+        title="Video Player"
+      ></iframe>
+
+      <div className="mt-4 flex justify-end gap-4">
+        <button
+          onClick={() => setSelectedVideo(null)} // Cierra el reproductor y vuelve al modal de selección
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Volver a seleccionar
+        </button>
+        <button
+          onClick={() => {
+            setSelectedVideo(null);
+            cerrarModal();
+          }} // Cierra ambos modales
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Cerrar todo
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+  
+
         </div>
       </div>
+      
     );
   }
   
