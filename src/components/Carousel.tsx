@@ -2,12 +2,12 @@ import React from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import "../styles/Carousel.css";
-import { AnimePopularResponse, Manwha, NuevoCapitulo } from "../services/manwhasService";
+import { AnimePopularResponse, Manwha, NuevoCapitulo, UltimoAnimeResponse } from "../services/manwhasService";
 
 interface CarouselProps {
-  manwhas: (Manwha | NuevoCapitulo | AnimePopularResponse)[]; // Puede ser un Manwha, NuevoCapitulo o AnimePopularResponse
+  manwhas: (Manwha | NuevoCapitulo | AnimePopularResponse | UltimoAnimeResponse)[]; // Puede ser un Manwha, NuevoCapitulo, AnimePopularResponse o UltimoAnimeResponse
   title: string;
-  type: 1 | 2 | 3; // 1: Recomendados, 2: Últimos capítulos, 3: Animes populares
+  type: 1 | 2 | 3 | 4; // 1: Recomendados, 2: Últimos capítulos, 3: Animes populares, 4: Últimos animes
 }
 
 const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
@@ -42,18 +42,17 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
         {manwhas.map((manwha) => (
           <div key={manwha.id} className="carousel-item">
             {/* Enlace dinámico según el tipo */}
-            {type === 2 && "latest_chapter" in manwha ? (
+            {type === 4 && "episodio" in manwha ? (
+              // Caso Últimos Animes
               <Link
-                to={`/read-manwha-chapter/${encodeURIComponent(
-                  (manwha as NuevoCapitulo).enlace
-                )}/${encodeURIComponent(
-                  (manwha as NuevoCapitulo).latest_chapter.name
+                to={`/anime-episode/${encodeURIComponent(
+                  (manwha as UltimoAnimeResponse).id
                 )}`}
                 className="carousel-link"
               >
                 <img
-                  src={manwha.portada}
-                  alt={manwha.titulo}
+                  src={(manwha as UltimoAnimeResponse).portada}
+                  alt={(manwha as UltimoAnimeResponse).titulo}
                   className="carousel-image"
                 />
               </Link>
@@ -72,7 +71,7 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
                 />
               </Link>
             ) : (
-              // Caso Manwha
+              // Caso Manwha o NuevoCapitulo
               <Link
                 to={`/manwha-perfil/${encodeURIComponent(
                   (manwha as Manwha).enlace
@@ -87,15 +86,15 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
               </Link>
             )}
 
-            {/* Título fuera de la imagen */}
+            {/* Información dinámica */}
             <div className="carousel-overlay">
-              {type === 1 ? (
+              {type === 4 && "episodio" in manwha ? (
+                <span>{(manwha as UltimoAnimeResponse).episodio}</span>
+              ) : type === 1 ? (
                 <>
                   <span className="star">⭐</span>
                   <span>{(manwha as Manwha).calificacion}</span>
                 </>
-              ) : type === 2 && "latest_chapter" in manwha ? (
-                <span>Capítulo {manwha.latest_chapter.name}</span>
               ) : type === 3 ? (
                 <span>Calificación: {(manwha as AnimePopularResponse).calificacion}</span>
               ) : (

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   getAnimesPopulares, 
-  AnimePopularResponse 
+  AnimePopularResponse, 
+  getUltimosAnimes, 
+  UltimoAnimeResponse 
 } from '../services/manwhasService'; // Asegúrate de que la ruta sea correcta
 import Spinner from '../components/Spinner';
 import Carousel from '../components/Carousel';
@@ -10,32 +12,33 @@ import '../styles/Anime.css'; // Asegúrate de tener los estilos correspondiente
 
 const AnimePage: React.FC = () => {
   const [animes, setAnimes] = useState<AnimePopularResponse[]>([]); // Estado para los animes populares
-  const [sliderData, setSliderData] = useState<AnimePopularResponse[]>([]); // Estado para los datos del slider
+  const [ultimosAnimes, setUltimosAnimes] = useState<UltimoAnimeResponse[]>([]); // Estado para los últimos animes
   const [loading, setLoading] = useState<boolean>(true); // Estado de carga
 
-  // Cargar los animes populares al montar el componente
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Llamada a la API
-        const [popularAnimes] = await Promise.all([
-          getAnimesPopulares(), // Obtener los animes populares
+        // Llamadas paralelas a la API
+        const [popularAnimes, fetchedUltimosAnimes] = await Promise.all([
+          getAnimesPopulares(),
+          getUltimosAnimes(),
         ]);
-  
-        // Barajar los animes de forma aleatoria
+
+        // Barajar los animes populares de forma aleatoria
         const shuffledAnimes = popularAnimes.sort(() => Math.random() - 0.5);
-  
-        setAnimes(shuffledAnimes); // Guardar los animes barajados
+
+        // Guardar los datos en el estado
+        setAnimes(shuffledAnimes);
+        setUltimosAnimes(fetchedUltimosAnimes);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       } finally {
         setLoading(false); // Desactivar el estado de carga
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
   if (loading) {
     return <Spinner />; // Mostrar el Spinner mientras se cargan los datos
@@ -44,6 +47,7 @@ const AnimePage: React.FC = () => {
   return (
     <div className="anime-page">
       <Carousel manwhas={animes} title="Recomendado para ti" type={1} />
+      <Carousel manwhas={ultimosAnimes} title="Últimos episodios" type={4} />
     </div>
   );
 };
