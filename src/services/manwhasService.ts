@@ -130,8 +130,8 @@ export interface ManwhasResponse {
   manwhas: ManwhaBusquedaResponse[]; // Contenedor de los manwhas
 }
 
-const API_BASE_URL = 'http://127.0.0.1:8000'; 
-//const API_BASE_URL = 'https://web-production-b3a6.up.railway.app'; 
+//const API_BASE_URL = 'http://127.0.0.1:8000'; 
+const API_BASE_URL = 'https://web-production-b3a6.up.railway.app'; 
 
 // Servicio para obtener los datos de Manwhas populares
 export const getManwhasPopulares = async (): Promise<Manwha[]> => {
