@@ -130,6 +130,14 @@ export interface ManwhasResponse {
   manwhas: ManwhaBusquedaResponse[]; // Contenedor de los manwhas
 }
 
+export interface AnimePopularResponse {
+  id: string; // Identificador del anime
+  titulo: string; // Título del anime
+  portada: string; // URL de la portada del anime
+  calificacion: string; // Calificación del anime
+}
+
+
 //const API_BASE_URL = 'http://127.0.0.1:8000'; 
 const API_BASE_URL = 'https://web-production-b3a6.up.railway.app'; 
 
@@ -276,6 +284,19 @@ export const getCargarSeriesManwhas = async (
     return response.data.manwhas;
   } catch (error) {
     console.error("Error al cargar los manwhas:", error);
+    throw error; // Lanzamos el error para que sea manejado en el componente que lo llame
+  }
+};
+
+export const getAnimesPopulares = async (): Promise<AnimePopularResponse[]> => {
+  try {
+    // Realizamos la solicitud GET al servidor
+    const response = await axios.get<AnimePopularResponse[]>(`${API_BASE_URL}/api/getPopulares`);
+
+    // Retornamos los datos de la respuesta
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener los animes populares:', error);
     throw error; // Lanzamos el error para que sea manejado en el componente que lo llame
   }
 };
