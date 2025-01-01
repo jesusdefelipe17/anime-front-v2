@@ -35,6 +35,7 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
     ],
   };
   
+  
 
   return (
     <div className="carousel-container">
