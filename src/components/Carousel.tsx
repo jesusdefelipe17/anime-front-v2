@@ -16,23 +16,25 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
     infinite: true,
     speed: 1000,
     slidesToShow: 8,
-    slidesToScroll: 8,
+    slidesToScroll: 1, // Cambia a 1 para un deslizamiento más fluido
     arrows: false,
+    swipeToSlide: true, // Permite un deslizamiento libre
     responsive: [
       {
         breakpoint: 1024,
-        settings: { slidesToShow: 6, slidesToScroll: 6 },
+        settings: { slidesToShow: 6, slidesToScroll: 1, swipeToSlide: true },
       },
       {
         breakpoint: 768,
-        settings: { slidesToShow: 4, slidesToScroll: 4 },
+        settings: { slidesToShow: 4, slidesToScroll: 1, swipeToSlide: true },
       },
       {
         breakpoint: 480,
-        settings: { slidesToShow: 2, slidesToScroll: 2 },
+        settings: { slidesToShow: 2, slidesToScroll: 1, swipeToSlide: true },
       },
     ],
   };
+  
 
   return (
     <div className="carousel-container">
