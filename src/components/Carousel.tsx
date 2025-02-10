@@ -2,12 +2,12 @@ import React from "react";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import "../styles/Carousel.css";
-import { Manwha, NuevoCapitulo } from "../services/manwhasService";
+import { AnimePopularResponse, Manwha, NuevoCapitulo, UltimoAnimeResponse } from "../services/manwhasService";
 
 interface CarouselProps {
-  manwhas: (Manwha | NuevoCapitulo)[]; // Puede ser un Manwha o un NuevoCapitulo
+  manwhas: (Manwha | NuevoCapitulo | AnimePopularResponse | UltimoAnimeResponse)[]; // Puede ser un Manwha, NuevoCapitulo, AnimePopularResponse o UltimoAnimeResponse
   title: string;
-  type: 1 | 2; // 1: Recomendados, 2: Últimos capítulos
+  type: 1 | 2 | 3 | 4; // 1: Recomendados, 2: Últimos capítulos, 3: Animes populares, 4: Últimos animes
 }
 
 const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
@@ -16,20 +16,21 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
     infinite: true,
     speed: 1000,
     slidesToShow: 8,
-    slidesToScroll: 8,
+    slidesToScroll: 1,
     arrows: false,
+    swipeToSlide: true,
     responsive: [
       {
         breakpoint: 1024,
-        settings: { slidesToShow: 6, slidesToScroll: 1 },
+        settings: { slidesToShow: 6, slidesToScroll: 1, swipeToSlide: true },
       },
       {
         breakpoint: 768,
-        settings: { slidesToShow: 4, slidesToScroll: 1 },
+        settings: { slidesToShow: 4, slidesToScroll: 1, swipeToSlide: true },
       },
       {
         breakpoint: 480,
-        settings: { slidesToShow: 2, slidesToScroll: 1 },
+        settings: { slidesToShow: 2, slidesToScroll: 1, swipeToSlide: true },
       },
     ],
   };
@@ -41,13 +42,25 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
         {manwhas.map((manwha) => (
           <div key={manwha.id} className="carousel-item">
             {/* Enlace dinámico según el tipo */}
-            {type === 2 && "latest_chapter" in manwha ? (
-              // Caso NuevoCapitulo
+            {type === 4 && "episodio" in manwha ? (
+              // Caso Últimos Animes
               <Link
-                to={`/read-manwha-chapter/${encodeURIComponent(
-                  (manwha as NuevoCapitulo).enlace
-                )}/${encodeURIComponent(
-                  (manwha as NuevoCapitulo).latest_chapter.name
+                to={`/anime-episode/${encodeURIComponent(
+                  (manwha as UltimoAnimeResponse).id
+                )}`}
+                className="carousel-link"
+              >
+                <img
+                  src={(manwha as UltimoAnimeResponse).portada}
+                  alt={(manwha as UltimoAnimeResponse).titulo}
+                  className="carousel-image"
+                />
+              </Link>
+            ) : type === 3 ? (
+              // Caso AnimePopularResponse
+              <Link
+                to={`/anime-profile/${encodeURIComponent(
+                  (manwha as AnimePopularResponse).id
                 )}`}
                 className="carousel-link"
               >
@@ -58,7 +71,7 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
                 />
               </Link>
             ) : (
-              // Caso Manwha
+              // Caso Manwha o NuevoCapitulo
               <Link
                 to={`/manwha-perfil/${encodeURIComponent(
                   (manwha as Manwha).enlace
@@ -73,17 +86,19 @@ const Carousel: React.FC<CarouselProps> = ({ manwhas, title, type }) => {
               </Link>
             )}
 
-            {/* Título fuera de la imagen */}
+            {/* Información dinámica */}
             <div className="carousel-overlay">
-              {type === 1 ? (
+              {type === 4 && "episodio" in manwha ? (
+                <span>{(manwha as UltimoAnimeResponse).episodio}</span>
+              ) : type === 1 ? (
                 <>
                   <span className="star">⭐</span>
                   <span>{(manwha as Manwha).calificacion}</span>
                 </>
-              ) : type === 2 && "latest_chapter" in manwha ? (
-                <span>Capítulo {manwha.latest_chapter.name}</span>
+              ) : type === 3 ? (
+                <span>Calificación: {(manwha as AnimePopularResponse).calificacion}</span>
               ) : (
-                <span>Capítulo desconocido</span>
+                <span>Información desconocida</span>
               )}
             </div>
 
