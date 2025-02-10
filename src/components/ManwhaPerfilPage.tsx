@@ -127,7 +127,7 @@ const ManwhaPerfilPage: React.FC = () => {
                className="group flex items-center justify-between gap-4 hover:bg-gray-700/25 px-4 py-1 rounded-full transition-background-color border border-gray-700 h-12 sf-ripple-container cursor-pointer"
                onClick={() =>
                  irALeerCapitulo(
-                   `https://olympuscomic.com/api/capitulo/${manwhaPerfil.url}/${capitulo.chapter_id}`,
+                   `https://olympuslectura.com/api/capitulo/${manwhaPerfil.url}/${capitulo.chapter_id}`,
                    capitulo.titulo,
                    capitulo.chapter_id.toString()
                  )
